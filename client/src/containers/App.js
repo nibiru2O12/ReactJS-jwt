@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import {BrowserRouter as Router, Route, Redirect, NavLink} from 'react-router-dom';
 
 import Login from '../components/Login';
@@ -11,21 +12,14 @@ import Dashboard from '../components/Dashboard';
 
 class App extends Component {
 
-  state = {
-    isAuth: false
-  }
-
-  handleSignin = () => {
-    this.setState({isAuth:true})
-    alert('signed in')
-  }
-
   handleSignout = () => {
     this.setState({isAuth:false})
   }
 
   render() {
-    const {isAuth} = this.state;
+
+    const {isAuth} = this.props;
+
     return (
       <Router>
         <div className="App">
@@ -36,7 +30,7 @@ class App extends Component {
             <ProtectedRoute path='/messages' isAuth={isAuth} component={Messages} />
             <ProtectedRoute path='/friends' isAuth={isAuth} component={Friends} />
             {
-              !isAuth && <Route path='/' component={()=><Login signin={this.handleSignin} />} />
+              !isAuth && <Route path='/' component={()=><Login />} />
             }
           </Switch>
         </div>
@@ -62,4 +56,10 @@ const ProtectedRoute = props => {
 
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    isAuth: state.auth.isAuth
+  }
+}
+
+export default connect(mapStateToProps)(App);

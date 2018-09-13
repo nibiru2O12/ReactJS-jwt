@@ -1,26 +1,33 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+
+import * as actions from '../store/actions';
 
 class Login extends Component{
 
   handleSignin = (callback) => {
 
-    const {history,location} = this.props;
+    const {history,location,login} = this.props;
 
-    callback();
+    login({username:"rj",password:"12345"})
 
-    if(location.state){
-      if(location.state.from) {
-        history.replace(location.state.from);
-        return false
-      }
-    }
+    // callback();
 
-    history.replace('/dashboard');
+    // if(location.state){
+    //   if(location.state.from) {
+    //     history.replace(location.state.from);
+    //     return false
+    //   }
+    // }
+
+    // history.replace('/dashboard');
 
   }
 
   render() {
+
+    console.log(this.props);
 
     const {signin} = this.props;
     return (
@@ -37,4 +44,16 @@ class Login extends Component{
   }
 }
 
-export default withRouter(Login);
+const mapStateToProp = (state) => {
+  return {
+    isAuth: state.auth.isAuth
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {  
+    login : ({username,password})=> dispatch(actions.signin({username,password}))
+  }
+}
+
+export default withRouter(connect(mapStateToProp,mapDispatchToProps)(Login));

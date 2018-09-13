@@ -4,14 +4,15 @@ const app = require('express')();
 const port = 3001;
 
 app.use(bodyparser.urlencoded({extended:true}))
+app.use(bodyparser.json());
 
 const secret = "shhhhh";
-const token_expiration = 60;
+const token_expiration = 10;
 
-app.get('/login',(req,res)=>{
-    const token = createToken({user:'rj sample'})
-    verifyToken(token)
-    res.send('ok')
+app.post('/api/login',(req,res)=>{
+    const {username,password} = req.body;
+    const token = createToken({username,password})
+    res.send(token)
 });
 
 function createToken(payload) {
