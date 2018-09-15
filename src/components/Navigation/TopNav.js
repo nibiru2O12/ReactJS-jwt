@@ -1,13 +1,18 @@
 import React from 'react'
 import {NavLink} from'react-router-dom';
 
-const TopNav = () => {
+const TopNav = (props) => {
+  const {isAuth,signout} = props;
   return(
     <ul style={{padding:"10px",listStyle:"none"}}>
       <NavItem to='dashboard'>Dashboard</NavItem>
       <NavItem to='posts'>Posts</NavItem>
       <NavItem to='messages'>Messages</NavItem>
-      <NavItem to='login'>Login</NavItem>
+      {
+        !isAuth
+        ? <NavItem to='login'>Login</NavItem>
+        : <a onClick={signout}>Logout</a>
+      }
     </ul>
   )
 }

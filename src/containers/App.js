@@ -11,17 +11,33 @@ import Dashboard from '../components/Dashboard';
 
 class App extends Component {
 
+  state = {
+    isAuth: false
+  }
+
+  handleSignin = () => {
+    this.setState({isAuth:true})
+    alert('signed in')
+  }
+
+  handleSignout = () => {
+    this.setState({isAuth:false})
+  }
+
   render() {
+    const {isAuth} = this.state;
     return (
       <Router>
         <div className="App">
-          <TopNav />
+          <TopNav isAuth={isAuth} signout={this.handleSignout} />
           <Switch>
             <Route path='/dashboard' component={Dashboard} />
-            <ProtectedRoute path='/posts' component={Posts} />
-            <ProtectedRoute path='/messages' component={Messages} />
-            <ProtectedRoute path='/friends' component={Friends} />
-            <Route path='/' component={Login} />
+            <ProtectedRoute path='/posts' isAuth={isAuth} component={Posts} />
+            <ProtectedRoute path='/messages' isAuth={isAuth} component={Messages} />
+            <ProtectedRoute path='/friends' isAuth={isAuth} component={Friends} />
+            {
+              !isAuth && <Route path='/' component={()=><Login signin={this.handleSignin} />} />
+            }
           </Switch>
         </div>
       </Router>
@@ -42,7 +58,7 @@ const ProtectedRoute = props => {
   )
  }
 
- return props.component
+ return <Route path={props.path} component={props.component} />
 
 }
 
